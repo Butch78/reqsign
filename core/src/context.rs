@@ -281,7 +281,8 @@ impl Env for OsEnv {
         std::env::vars().collect()
     }
 
-    #[cfg(any(unix, target_os = "redox"))]
+    // wasm32-unknown-emscripten is `unix` and `wasm32` at once; the wasm32 impl below is its.
+    #[cfg(all(any(unix, target_os = "redox"), not(target_arch = "wasm32")))]
     fn home_dir(&self) -> Option<PathBuf> {
         #[allow(deprecated)]
         std::env::home_dir()
